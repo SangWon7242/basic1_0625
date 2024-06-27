@@ -216,6 +216,22 @@ public class HomeController {
     return "%d번 사람이 추가되었습니다.".formatted(p.getId());
   }
 
+  @GetMapping("/home/removePerson")
+  @ResponseBody
+  public String removePerson(int id) {
+    // person -> person.getId() == id
+    // 위 함수가 참인 엘리먼트(요소)가 존재하면, 해당 요소를 삭제
+    // removed 변수에는 삭제주행 여부가 저장된다.
+    // 조건에 맞는 걸 찾았고, 삭제까지 되었다면 true, 아니면 false
+    boolean removed = people.removeIf(person -> person.getId() == id);
+
+    if(!removed) {
+      return "%d번 사람이 존재하지 않습니다.".formatted(id);
+    }
+
+    return "%d번 사람이 삭제되었습니다.".formatted(id);
+  }
+
   @GetMapping("/home/showPeople")
   @ResponseBody
   public List<Person> showPeople() {
