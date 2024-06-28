@@ -1,5 +1,7 @@
 package com.basic1.controller;
 
+import com.basic1.boundedContext.member.entity.Member;
+import com.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,18 +17,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.util.*;
 
-
 // @Controller
 // 개발자가 스프링부트에 말한다.
 // HomeController는 컨트롤러이다.
 @Controller
 public class HomeController {
+  private MemberService memberService;
+
+
   private int count;
   private List<Person> people;
 
   public HomeController() {
     count = -1;
     people = new ArrayList<>();
+
+    memberService = new MemberService();
   }
 
   // @GetMapping("/home/main") 의 의미
@@ -285,6 +291,12 @@ public class HomeController {
     int age = Integer.parseInt(req.getParameter("age"));
 
     resp.getWriter().append("Hello, you are %d years old".formatted(age));
+  }
+
+  @GetMapping("/home/user1")
+  @ResponseBody
+  public Member showUser1() {
+   return memberService.findByUserName("user1");
   }
 }
 
