@@ -23,15 +23,22 @@ import java.util.*;
 // HomeController는 컨트롤러이다.
 @Controller
 public class HomeController {
+  /*
+  // 필드 주입
   @Autowired
   private MemberService memberService;
+   */
+  private final MemberService memberService;
 
   private int count;
   private List<Person> people;
 
-  public HomeController() {
+  // @Autowired 생략 가능(생성자 주입)
+  public HomeController(MemberService memberService) {
     count = -1;
     people = new ArrayList<>();
+
+    this.memberService = memberService;
   }
 
   // @GetMapping("/home/main") 의 의미

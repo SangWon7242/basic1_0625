@@ -1,10 +1,14 @@
 package com.basic1.boundedContext.member.repository;
 
 import com.basic1.boundedContext.member.entity.Member;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// @Component
+@Repository // 컴포넌트랑 똑같음
 public class MemberRepository {
   private List<Member> members;
 
