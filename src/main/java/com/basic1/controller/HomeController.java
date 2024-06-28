@@ -1,5 +1,8 @@
 package com.basic1.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 
 // @Controller
@@ -231,7 +232,7 @@ public class HomeController {
     // 조건에 맞는 걸 찾았고, 삭제까지 되었다면 true, 아니면 false
     boolean removed = people.removeIf(person -> person.getId() == id);
 
-    if(!removed) {
+    if (!removed) {
       return "%d번 사람이 존재하지 않습니다.".formatted(id);
     }
 
@@ -247,7 +248,7 @@ public class HomeController {
         .findFirst() // 필터링 결과가 하나만 남는데, 그 하나 남은걸 가져온다.
         .orElse(null); // 없으면 null을 넣어줘라
 
-    if(found == null) {
+    if (found == null) {
       return "%d번 사람이 존재하지 않습니다.".formatted(id);
     }
 
@@ -255,6 +256,35 @@ public class HomeController {
     found.setAge(age);
 
     return "%d번 사람이 수정되었습니다.".formatted(id);
+  }
+
+  @GetMapping("/home/cookie/increase")
+  @ResponseBody
+  public int showCookieIncrease(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    int countInCookie = 0;
+
+    if (req.getCookies() != null) {
+      countInCookie = Arrays.stream(req.getCookies())
+          .filter(cookie -> cookie.getName().equals("count"))
+          .map(cookie -> cookie.getValue())
+          .mapToInt(Integer::parseInt)
+          .findFirst()
+          .orElse(0);
+    }
+
+    int newCountCookie = countInCookie + 1;
+
+    resp.addCookie(new Cookie("count", countInCookie + ""));
+
+    return newCountCookie;
+  }
+
+  @GetMapping("/home/reqAndResp")
+  @ResponseBody
+  public void showReqAndResp(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    int age = Integer.parseInt(req.getParameter("age"));
+
+    resp.getWriter().append("Hello, you are %d years old".formatted(age));
   }
 }
 
@@ -313,8 +343,6 @@ class Person {
   static {
     lastId = 0;
   }
-
-
 
   public Person(String name, int age) {
     this(++lastId, name, age);
