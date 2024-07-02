@@ -46,18 +46,18 @@ public class Rq {
 
   public boolean removeCookie(String name) {
     if (req.getCookies() != null) {
-      Arrays.stream(req.getCookies())
-          .filter(cookie -> cookie.getName().equals(name))
-          .forEach(cookie -> {
-            cookie.setMaxAge(0); // 쿠키의 수명을 0으로 줄인다.
-            resp.addCookie(cookie); // 줄인 녀석을 쿠키에 넣어준다.
-          });
+      Cookie cookie = Arrays.stream(req.getCookies())
+          .filter(c -> c.getName().equals(name))
+          .findFirst()
+          .orElse(null);
 
-      return Arrays.stream(req.getCookies())
-          .filter(cookie -> cookie.getName().equals(name))
-          .count() > 0;
-      // 쿠키를 가져왔는데 그 개수가 0보다 크다? true를 반환
-      // true를 반환했다는 의미는 로그아웃이 되어 있지 않다.
+
+      if(cookie != null) {
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);
+
+        return true;
+      }
     }
 
     return false;
