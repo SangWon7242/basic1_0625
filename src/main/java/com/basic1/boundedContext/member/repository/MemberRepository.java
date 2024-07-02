@@ -27,7 +27,7 @@ public class MemberRepository {
   }
 
 
-  public Member findByUserName(String username) {
+  public Member findByUsername(String username) {
     return members.stream()
         .filter(member -> member.getUsername().equals(username))
         .findFirst()
