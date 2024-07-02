@@ -1,7 +1,6 @@
 package com.basic1.boundedContext.member.repository;
 
 import com.basic1.boundedContext.member.entity.Member;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -31,6 +30,13 @@ public class MemberRepository {
   public Member findByUserName(String username) {
     return members.stream()
         .filter(member -> member.getUsername().equals(username))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public Member findById(long id) {
+    return members.stream()
+        .filter(member -> member.getId() == id)
         .findFirst()
         .orElse(null);
   }
